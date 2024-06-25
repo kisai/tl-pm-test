@@ -10,27 +10,27 @@ class TemperatureSpread
   attr_reader :file
 
   COLUMN_RANGES = {
-    :Dy =>2..3,
-    :MnT=>11..13,
-    :MxT=>5..7,
-    :AvT=>17..19,
-    :HDDay=>23..27,
-    :AvDP=>30..33,
-    :"1HrP"=>35..38,
-    :TPcpn=>40..44,
-    :WxType=>46..51,
-    :PDir=>53..56,
-    :AvSp=>58..61,
-    :Dir=>63..65,
-    :MxS=>67..69,
-    :SkyC=>71..74,
-    :MxR=>76..78,
-    :MnR=>80..82,
-    :AvSLP=>83..88
+    Dy: 2..3,
+    MnT: 11..13,
+    MxT: 5..7,
+    AvT: 17..19,
+    HDDay: 23..27,
+    AvDP: 30..33,
+    "1HrP": 35..38,
+    TPcpn: 40..44,
+    WxType: 46..51,
+    PDir: 53..56,
+    AvSp: 58..61,
+    Dir: 63..65,
+    MxS: 67..69,
+    SkyC: 71..74,
+    MxR: 76..78,
+    MnR: 80..82,
+    AvSLP: 83..88
   }
 
-  def initialize(file_relative_path)
-    @file_relative_path = file_relative_path
+  def initialize(file_rel_path)
+    @file_relative_path = file_rel_path
     @logger = Logger.new(STDOUT)
 
     unless File.exist?(file_relative_path)
@@ -51,12 +51,12 @@ class TemperatureSpread
   end
 
   def column_at_name(line, name)
-    line[COLUMN_RANGES[name]]
+    line[COLUMN_RANGES[name]].strip
   end
 
   def day_with_smallest_spread
-    smallest_spread = nil
-    smallest_spread_day = nil
+    smallest_spread = Float::INFINITY
+    smallest_spread_day = 1
 
     file.each_line do |line|
       next unless valid_line?(line)
@@ -64,12 +64,10 @@ class TemperatureSpread
       day = column_at_name(line, :Dy).to_i
       max_temp = column_at_name(line, :MxT).to_f
       min_temp = column_at_name(line, :MnT).to_f
+      difference = (max_temp - min_temp).abs
 
-      smallest_spread ||= max_temp - min_temp
-      smallest_spread_day ||= day
-
-      if max_temp - min_temp < smallest_spread
-        smallest_spread = max_temp - min_temp
+      if difference < smallest_spread
+        smallest_spread = difference
         smallest_spread_day = day
       end
     end
@@ -79,6 +77,6 @@ class TemperatureSpread
 end
 
 if __FILE__ == $PROGRAM_NAME
-  temperature_spread = TemperatureSpread.new(ARGV[0])
+  temperature_spread = TemperatureSpread.new(ARGV[0].to_s)
   puts temperature_spread.day_with_smallest_spread
 end

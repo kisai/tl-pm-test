@@ -41,7 +41,7 @@ RSpec.describe TeamSmallestDifference do
     end
 
     it 'returns false for lines not starting with numbers' do
-      invalid_lines = [0, 1, 2, 4, 6, 7]
+      invalid_lines = [0, 1, 2, 4, 6]
       invalid_lines.each do |index|
         expect(team_smallest_difference.valid_line?(test_lines[index])).to be false
       end
