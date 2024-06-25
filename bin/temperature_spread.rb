@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 #
 require 'logger'
+require 'pry'
 
 class TemperatureSpread
   attr_reader :file_relative_path
@@ -61,8 +62,8 @@ class TemperatureSpread
       next unless valid_line?(line)
 
       day = column_at_name(line, :Dy).to_i
-      max_temp = column_at_name(line, :MxT).to_i
-      min_temp = column_at_name(line, :MnT).to_i
+      max_temp = column_at_name(line, :MxT).to_f
+      min_temp = column_at_name(line, :MnT).to_f
 
       smallest_spread ||= max_temp - min_temp
       smallest_spread_day ||= day
@@ -75,4 +76,9 @@ class TemperatureSpread
 
     smallest_spread_day
   end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  temperature_spread = TemperatureSpread.new(ARGV[0])
+  puts temperature_spread.day_with_smallest_spread
 end
