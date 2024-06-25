@@ -1,6 +1,7 @@
 # spec/temperature_spread_spec.rb
 # frozen_string_literal: true
 require 'spec_helper'
+require 'logger'
 
 require_relative '../bin/temperature_spread'
 
@@ -22,7 +23,7 @@ RSpec.describe TemperatureSpread do
       expect { TemperatureSpread.new(unexistant_path) }.to raise_error(Errno::ENOENT)
       expect(@logger).to have_received(:error).with("File does not exist")
     end
-    it 'raises an error if the path is a file' do
+    it 'raises an error if the path is not a file' do
       expect { TemperatureSpread.new(directory_path) }.to raise_error(Errno::EISDIR)
       expect(@logger).to have_received(:error).with("Path is not a file")
     end
@@ -31,7 +32,7 @@ RSpec.describe TemperatureSpread do
     end
   end
 
-  describe '#valid_line' do
+  describe '#valid_line?' do
     it 'returns true for lines starting with numbers' do
       expect(temperature_spread.valid_line(test_lines[4])).to be true
       expect(temperature_spread.valid_line(test_lines[5])).to be true
@@ -40,7 +41,7 @@ RSpec.describe TemperatureSpread do
     it 'returns false for lines not starting with numbers' do
       invalid_lines = [0, 1, 2, 3, 6, 7]
       invalid_lines.each do |index|
-        expect(temperature_spread.valid_line(test_lines[index])).to be false
+        expect(temperature_spread.valid_line?(test_lines[index])).to be false
       end
     end
   end
