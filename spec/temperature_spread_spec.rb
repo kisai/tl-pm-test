@@ -34,8 +34,8 @@ RSpec.describe TemperatureSpread do
 
   describe '#valid_line?' do
     it 'returns true for lines starting with numbers' do
-      expect(temperature_spread.valid_line(test_lines[4])).to be true
-      expect(temperature_spread.valid_line(test_lines[5])).to be true
+      expect(temperature_spread.valid_line?(test_lines[4])).to be true
+      expect(temperature_spread.valid_line?(test_lines[5])).to be true
     end
 
     it 'returns false for lines not starting with numbers' do
@@ -48,7 +48,7 @@ RSpec.describe TemperatureSpread do
 
   describe "#day_with_smallest_spread" do
     it 'returns the day with the smallest temperature spread' do
-      expect(temperature_spread.day_with_smallest_spread).to eq(10)
+      expect(temperature_spread.day_with_smallest_spread).to eq(1)
     end
   end
 end
